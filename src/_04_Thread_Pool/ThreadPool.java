@@ -3,38 +3,33 @@ package _04_Thread_Pool;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ThreadPool {
-
 	Thread[] threads;
-	ConcurrentLinkedQueue<Task> taskQueue;
+	ConcurrentLinkedQueue<Task> queue;
 
-	public ThreadPool(int totalThreads) {
-		taskQueue = new ConcurrentLinkedQueue<Task>();
-		threads = new Thread[totalThreads];
-		for (int i = 0; i < threads.length; i++) {
-			threads[i] = new Thread(new Worker(taskQueue));
-
+	ThreadPool(int i) {
+		queue = new ConcurrentLinkedQueue<Task>();
+		threads = new Thread[i];
+		for (int j = 0; j < threads.length; j++) {
+			threads[j] = new Thread(new Worker(queue));
 		}
+
 	}
 
 	public void start() {
-		for (int i = 0; i < threads.length; i++) {
-			threads[i].start();
-
+		for (Thread thr : threads) {
+			thr.start();
 		}
-		for (int i = 0; i < threads.length; i++) {
+		for (Thread thr : threads) {
 			try {
-				threads[i].join();
+				thr.join();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-
 	}
 
-	public void addTask(Task task) {
-		taskQueue.add(task);
+	public void addTask(Task t) {
+		queue.add(t);
 
 	}
-
 }

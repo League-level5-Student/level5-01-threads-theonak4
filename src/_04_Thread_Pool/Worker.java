@@ -3,18 +3,18 @@ package _04_Thread_Pool;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Worker implements Runnable {
-	ConcurrentLinkedQueue<Task> taskQueue;
+	ConcurrentLinkedQueue<Task> queue;
 
-	public Worker(ConcurrentLinkedQueue<Task> taskQueue) {
-		this.taskQueue = taskQueue;
-
+	Worker(ConcurrentLinkedQueue<Task> queue) {
+		this.queue = queue;
 	}
 
 	public void run() {
-		while (!taskQueue.isEmpty()) {
-			taskQueue.poll().perform();
+		synchronized (queue) {
+			while (queue.size() > 0) {
+				queue.remove().perform();
+			}
 		}
-
 	}
 
 }
